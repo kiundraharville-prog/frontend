@@ -1,70 +1,184 @@
-# Getting Started with Create React App
+# Product Management System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Project Overview
 
-## Available Scripts
+This project is a full-stack Product Management System built with:
 
-In the project directory, you can run:
+- Flask (Backend API)
+- React (Frontend UI)
+- SQLite Database
+- n8n AI Chatbot
+- AWS EC2 Deployment
 
-### `npm start`
+Users can add, view, and edit products through a web dashboard. An AI chatbot connected through n8n can answer inventory questions using live product data.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Features
 
-### `npm test`
+### Backend (Flask)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Create Products
+- View Products
+- Update Products
+- Product Count Endpoint
+- SQLite Database Storage
 
-### `npm run build`
+### Frontend (React)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Product Dashboard
+- Add New Products
+- View Product Inventory
+- Edit Existing Products
+- Responsive Layout
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### AI Chatbot (n8n)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Connects to Product Database
+- Reads Live Inventory Data
+- Answers Natural Language Questions
 
-### `npm run eject`
+Example:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+> How many products do we have in the catalog?
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Response:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+> We currently have 5 products registered in the catalog.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## Technologies Used
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Python
+- Flask
+- Flask SQLAlchemy
+- Flask CORS
+- React
+- Axios
+- SQLite
+- n8n
+- AWS EC2
+- Nginx
+- Gunicorn
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## Project Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```text
+product-management-system
+│
+├── backend
+│   ├── app.py
+│   ├── products.db
+│   ├── requirements.txt
+│   ├── static
+│   └── templates
+│
+├── frontend
+│
+├── n8n_workflow.json
+│
+└── README.md
+```
 
-### Analyzing the Bundle Size
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Installation
 
-### Making a Progressive Web App
+### Backend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```bash
+cd backend
 
-### Advanced Configuration
+python -m venv venv
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+source venv/bin/activate
+```
 
-### Deployment
+Install dependencies:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```bash
+pip install -r requirements.txt
+```
 
-### `npm run build` fails to minify
+Run Flask:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+python app.py
+```
+
+Backend runs on:
+
+```text
+http://127.0.0.1:5000
+```
+
+---
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+Frontend runs on:
+
+```text
+http://localhost:3000
+```
+
+---
+
+## API Endpoints
+
+### Get Products
+
+```http
+GET /products
+```
+
+### Add Product
+
+```http
+POST /products
+```
+
+### Update Product
+
+```http
+PUT /products/<id>
+```
+
+### Get Product Count
+
+```http
+GET /products/count
+```
+
+---
+
+## AWS Deployment
+
+The application was deployed using:
+
+- AWS EC2
+- Nginx Reverse Proxy
+- Gunicorn
+- Certbot SSL
+
+Live URL:
+
+```text
+https://capstone-yourname.yourdomain.com
+```
+
+---
+
+## Author
+
+Kiundra Harville
+
