@@ -173,7 +173,7 @@ The application was deployed using:
 Live URL:
 
 ```text
-https://capstone-yourname.yourdomain.com
+https://capstone-kiundra.pathway4.click
 ```
 
 ---
