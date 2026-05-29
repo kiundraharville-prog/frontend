@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import "./App.css";
 
 function App() {
+  const API_URL = "http://127.0.0.1:5000";
 
   const [products, setProducts] = useState([]);
+  const [editingId, setEditingId] = useState(null);
 
   const [form, setForm] = useState({
     name: "",
@@ -11,80 +14,133 @@ function App() {
     quantity: ""
   });
 
-  // Load Products
-  const getProducts = async () => {
-
-    const response = await axios.get("http://127.0.0.1:5000/products");
-
+  const fetchProducts = async () => {
+    const response = await axios.get(`${API_URL}/products`);
     setProducts(response.data);
   };
 
   useEffect(() => {
-    getProducts();
+    fetchProducts();
   }, []);
 
-  // Add Product
-  const addProduct = async () => {
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    });
+  };
 
-    await axios.post("http://127.0.0.1:5000/products", form);
-
-    getProducts();
-
+  const clearForm = () => {
     setForm({
       name: "",
       price: "",
       quantity: ""
     });
+    setEditingId(null);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!form.name || !form.price || !form.quantity) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    if (editingId) {
+      await axios.put(`${API_URL}/products/${editingId}`, form);
+    } else {
+      await axios.post(`${API_URL}/products`, form);
+    }
+
+    clearForm();
+    fetchProducts();
+  };
+
+  const startEdit = (product) => {
+    setEditingId(product.id);
+
+    setForm({
+      name: product.name,
+      price: product.price,
+      quantity: product.quantity
+    });
   };
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="page">
+      <div className="card">
+        <h1>Product Dashboard</h1>
+        <p className="subtitle">Manage your product catalog</p>
 
-      <h1>Product Dashboard</h1>
+        <form onSubmit={handleSubmit} className="form">
+          <input
+            name="name"
+            placeholder="Product name"
+            value={form.name}
+            onChange={handleChange}
+          />
 
-      <input
-        placeholder="Name"
-        value={form.name}
-        onChange={(e) =>
-          setForm({ ...form, name: e.target.value })
-        }
-      />
+          <input
+            name="price"
+            type="number"
+            step="0.01"
+            placeholder="Price"
+            value={form.price}
+            onChange={handleChange}
+          />
 
-      <input
-        placeholder="Price"
-        value={form.price}
-        onChange={(e) =>
-          setForm({ ...form, price: e.target.value })
-        }
-      />
+          <input
+            name="quantity"
+            type="number"
+            placeholder="Quantity"
+            value={form.quantity}
+            onChange={handleChange}
+          />
 
-      <input
-        placeholder="Quantity"
-        value={form.quantity}
-        onChange={(e) =>
-          setForm({ ...form, quantity: e.target.value })
-        }
-      />
+          <button type="submit">
+            {editingId ? "Update Product" : "Add Product"}
+          </button>
 
-      <button onClick={addProduct}>
-        Add Product
-      </button>
+          {editingId && (
+            <button type="button" className="cancel" onClick={clearForm}>
+              Cancel
+            </button>
+          )}
+        </form>
 
-      <hr />
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Edit</th>
+            </tr>
+          </thead>
 
-      {products.map((product) => (
+          <tbody>
+            {products.map((product) => (
+              <tr key={product.id}>
+                <td>{product.id}</td>
+                <td>{product.name}</td>
+                <td>${Number(product.price).toFixed(2)}</td>
+                <td>{product.quantity}</td>
+                <td>
+                  <button className="edit" onClick={() => startEdit(product)}>
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-        <div key={product.id}>
-
-          <h3>{product.name}</h3>
-
-          <p>Price: ${product.price}</p>
-
-          <p>Quantity: {product.quantity}</p>
-
-        </div>
-      ))}
-
+        {products.length === 0 && (
+          <p className="empty">No products yet. Add one above.</p>
+        )}
+      </div>
     </div>
   );
 }
