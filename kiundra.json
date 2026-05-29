@@ -1,0 +1,140 @@
+{
+  "name": "kiundra",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2bded753-7ac2-43a4-9af2-c3f3f22af54a",
+      "name": "When chat message received",
+      "webhookId": "adccd6e7-5441-4b71-bbc3-8378bc8d49fb"
+    },
+    {
+      "parameters": {
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a product inventory assistant.\n\nUse the Query_Product_Table tool one time to get product data.\n\nThe table is named product.\n\nThe tool already runs this query:\nSELECT id, name, price, quantity FROM product;\n\nAfter the tool returns data, answer the user's question using that data.\n\nIf the user asks how many products are in the catalog, count the returned products and say:\n\"We currently have X products registered in the catalog.\"\n\nDo not call the tool more than once.\nDo not create SQL.\nDo not ask follow-up questions.\nDo not invent products.\nKeep the answer short and friendly.",
+          "maxIterations": 15
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "498268bb-c06a-4e1c-89e4-adbf44c5f3fe",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai.gpt-oss-safeguard-120b",
+        "options": {
+          "maxTokensToSample": 500,
+          "temperature": 0.1
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAwsBedrock",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        112
+      ],
+      "id": "93cab6d8-39dd-460c-83bf-097639cd7382",
+      "name": "AWS Bedrock Chat Model",
+      "credentials": {
+        "aws": {
+          "id": "Tn2LWYtMmwJF77yK",
+          "name": "AWS (IAM) account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "product",
+          "mode": "list",
+          "cachedResultName": "product"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgresTool",
+      "typeVersion": 2.6,
+      "position": [
+        368,
+        208
+      ],
+      "id": "94bd5c0c-e674-446a-8154-e9157455f541",
+      "name": "Query Product Table",
+      "credentials": {
+        "postgres": {
+          "id": "TR3gQvDkT5pnAzqJ",
+          "name": "Kiundra"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AWS Bedrock Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Product Table": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "81e930a3-4e3c-4644-a43c-32586d144220",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bad5f4fed246c20a00a3b781cb3d2477de005a512727d1e49d9280b36fddc982"
+  },
+  "id": "4DhwvbT25Z1MzleO",
+  "tags": []
+}
